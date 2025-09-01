@@ -14,6 +14,145 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_participants: {
+        Row: {
+          chat_room_id: string
+          id: string
+          is_admin: boolean | null
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          chat_room_id: string
+          id?: string
+          is_admin?: boolean | null
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          chat_room_id?: string
+          id?: string
+          is_admin?: boolean | null
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_participants_chat_room_id_fkey"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          type: Database["public"]["Enums"]["chat_room_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          type?: Database["public"]["Enums"]["chat_room_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          type?: Database["public"]["Enums"]["chat_room_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      message_requests: {
+        Row: {
+          created_at: string
+          from_user_id: string
+          id: string
+          message: string | null
+          status: Database["public"]["Enums"]["request_status"] | null
+          to_user_email: string
+          to_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          from_user_id: string
+          id?: string
+          message?: string | null
+          status?: Database["public"]["Enums"]["request_status"] | null
+          to_user_email: string
+          to_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          from_user_id?: string
+          id?: string
+          message?: string | null
+          status?: Database["public"]["Enums"]["request_status"] | null
+          to_user_email?: string
+          to_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          chat_room_id: string
+          content: string
+          created_at: string
+          id: string
+          is_edited: boolean | null
+          message_type: string | null
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          chat_room_id: string
+          content: string
+          created_at?: string
+          id?: string
+          is_edited?: boolean | null
+          message_type?: string | null
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          chat_room_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_edited?: boolean | null
+          message_type?: string | null
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_chat_room_id_fkey"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -52,7 +191,8 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      chat_room_type: "main" | "group" | "direct"
+      request_status: "pending" | "accepted" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -179,6 +319,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      chat_room_type: ["main", "group", "direct"],
+      request_status: ["pending", "accepted", "rejected"],
+    },
   },
 } as const
